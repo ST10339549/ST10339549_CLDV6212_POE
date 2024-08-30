@@ -1,4 +1,4 @@
-﻿@model List<string>
+﻿@model List<ST10339549_CLDV6212_POE.Services.OrderMessage>
 
 @{
     ViewBag.Title = "Order Processing";
@@ -8,10 +8,18 @@
 
 <form asp-action="OrderProcessing" method="post">
     <div class="form-group">
-        <label for="order">Add New Order:</label>
-        <input type="text" name="order" id="order" class="form-control" placeholder="Enter order details" required />
+        <label for="orderId">Order ID:</label>
+        <input type="text" name="orderId" id="orderId" class="form-control" placeholder="Enter order ID" required />
     </div>
-    <button type="submit" class="btn btn-primary">Add Order</button>
+    <div class="form-group">
+        <label for="productId">Product ID:</label>
+        <input type="text" name="productId" id="productId" class="form-control" placeholder="Enter product ID" required />
+    </div>
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter quantity" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Add Order</button>
 </form>
 
 <hr />
@@ -21,19 +29,22 @@
     <table class="table table-striped mt-4">
         <thead>
             <tr>
-                <th>Order Details</th>
-                <th>Actions</th>
+                <th>Order ID</th>
+                <th>Product ID</th>
+                <th>Quantity</th>
+                <th>Action</th>
+                <th>Timestamp</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var message in Model)
             {
                 <tr>
-                    <td>@message</td>
-                    <td>
-                        <button class="btn btn-primary">View</button>
-                        <button class="btn btn-danger">Delete</button>
-                    </td>
+                    <td>@message.OrderId</td>
+                    <td>@message.ProductId</td>
+                    <td>@message.Quantity</td>
+                    <td>@message.Action</td>
+                    <td>@message.Timestamp</td>
                 </tr>
             }
         </tbody>
