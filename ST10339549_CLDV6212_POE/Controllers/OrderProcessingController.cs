@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using ST10339549_CLDV6212_POE.Models;
 using ST10339549_CLDV6212_POE.Services;
 using System;
 
