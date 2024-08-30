@@ -44,9 +44,9 @@
                                     <i class="fas fa-file-contract text-secondary"></i> @System.IO.Path.GetFileName(file)
                                 </td>
                                 <td class="text-center">
-                                    <!-- Download button with tooltip -->
-                                    <a href="@file" class="btn btn-outline-success btn-sm" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Download Contract">
-                                        <i class="fas fa-download"></i> Download
+                                    <!-- Delete button with tooltip -->
+                                    <a href="@Url.Action("Delete", "FileStorage", new { fileName = System.IO.Path.GetFileName(file) })" class="btn btn-outline-danger btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Contract">
+                                        <i class="fas fa-trash-alt"></i> Delete
                                     </a>
                                 </td>
                             </tr>

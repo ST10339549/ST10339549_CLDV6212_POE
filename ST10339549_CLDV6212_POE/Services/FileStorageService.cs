@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Files.Shares;
-using Microsoft.AspNetCore.WebUtilities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ST10339549_CLDV6212_POE.Services
 {
@@ -20,11 +21,8 @@ namespace ST10339549_CLDV6212_POE.Services
 
             using var readStream = formFile.OpenReadStream();
 
-            // Create the file on Azure Files with the length of the stream
             await fileClient.CreateAsync(readStream.Length);
-
-            // Upload the file in chunks if necessary; otherwise, use a single call if the file is small.
-            await fileClient.UploadAsync(readStream); // Upload the stream directly now that the file is created.
+            await fileClient.UploadAsync(readStream);
         }
 
         public async Task<List<string>> FilesAsync()
@@ -33,11 +31,17 @@ namespace ST10339549_CLDV6212_POE.Services
             var directory = _share.GetRootDirectoryClient();
             await foreach (var item in directory.GetFilesAndDirectoriesAsync())
             {
-                // Generate the full URL to the file for display purposes
                 var fileUrl = $"{_share.Uri}/{item.Name}";
                 files.Add(fileUrl);
             }
             return files;
+        }
+
+        public async Task DeleteFileAsync(string fileName)
+        {
+            var directory = _share.GetRootDirectoryClient();
+            var fileClient = directory.GetFileClient(fileName);
+            await fileClient.DeleteIfExistsAsync();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ST10339549_CLDV6212_POE.Services;
+using System.Threading.Tasks;
 
 namespace ST10339549_CLDV6212_POE.Controllers
 {
@@ -18,12 +19,38 @@ namespace ST10339549_CLDV6212_POE.Controllers
             var files = await _fileStorageService.FilesAsync();
             return View(files);
         }
+
         [HttpPost]
         public async Task<IActionResult> Upload(IFormFile formFile)
         {
             if (formFile != null)
             {
                 await _fileStorageService.UploadAsync(formFile);
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: FileStorage/Delete?fileName=filename
+        [HttpGet]
+        public IActionResult Delete(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return NotFound();
+            }
+
+            ViewBag.FileName = fileName;
+            return View();
+        }
+
+        // POST: FileStorage/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string fileName)
+        {
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                await _fileStorageService.DeleteFileAsync(fileName);
             }
             return RedirectToAction(nameof(Index));
         }
