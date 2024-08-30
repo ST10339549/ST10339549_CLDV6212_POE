@@ -1,35 +1,78 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ST10339549_CLDV6212_POE.Models;
 using ST10339549_CLDV6212_POE.Services;
+using System.Threading.Tasks;
 
 namespace ST10339549_CLDV6212_POE.Controllers
 {
-  public class CustomerController : Controller
-  {
-    private readonly TableStorageService _tableStorageService; 
-
-    public CustomerController()
+    public class CustomerController : Controller
     {
-      string connectionString = "DefaultEndpointsProtocol=https;AccountName=st10339549;AccountKey=HCmh5cT2Fn6cnXsTna69QdswQCunUPD06UBscauSGoKgAlGTm4Vbsa9zpuQUQoR7lRKEuM1WFdId+AStcM6ObQ==;EndpointSuffix=core.windows.net";
-      _tableStorageService = new TableStorageService(connectionString);
-    }
+        private readonly TableStorageService _tableStorageService;
 
-    public async Task<IActionResult> Index()
-    {
-      var customers = await _tableStorageService.GetCustomersAsync();
-      return View(customers);
-    }
+        public CustomerController()
+        {
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=st10339549;AccountKey=2r3eN6egjj4zNt9nF8Bw2zMs7XwNBGnPcCiTgJG1jtDfATA+SeE8xYjqgCEdyFy9XMNHTiV1NPJw+AStGagjiw==;EndpointSuffix=core.windows.net";
 
-    public IActionResult Create() => View();
+            // Ensure the connection string is correct and properly formatted
+            _tableStorageService = new TableStorageService(connectionString);
+        }
 
-    public async Task<IActionResult> Create(Customer customer)
-    {
-      if (ModelState.IsValid)
-      {
-        await _tableStorageService.AddCustomerAsync(customer);
-        return RedirectToAction(nameof(Index));
-      }
-      return View(customer);
+        public async Task<IActionResult> Index()
+        {
+            var customers = await _tableStorageService.GetCustomersAsync();
+            return View(customers);
+        }
+
+        [HttpGet]
+        public IActionResult Create() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                await _tableStorageService.AddCustomerAsync(customer);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(customer);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string partitionKey, string rowKey)
+        {
+            var customer = await _tableStorageService.GetCustomerAsync(partitionKey, rowKey);
+            return View(customer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Customer customer)
+        {
+            if (ModelState.IsValid)
+            {
+                await _tableStorageService.UpdateCustomerAsync(customer);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(customer);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string partitionKey, string rowKey)
+        {
+            var customer = await _tableStorageService.GetCustomerAsync(partitionKey, rowKey);
+            return View(customer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Customer customer)
+        {
+            await _tableStorageService.DeleteCustomerAsync(customer);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(string partitionKey, string rowKey)
+        {
+            var customer = await _tableStorageService.GetCustomerAsync(partitionKey, rowKey);
+            return View(customer);
+        }
     }
-  }
 }

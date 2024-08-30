@@ -9,22 +9,21 @@ namespace ST10339549_CLDV6212_POE.Controllers
 
         public FileStorageController()
         {
-            string connectionString = "";
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=st10339549;AccountKey=2r3eN6egjj4zNt9nF8Bw2zMs7XwNBGnPcCiTgJG1jtDfATA+SeE8xYjqgCEdyFy9XMNHTiV1NPJw+AStGagjiw==;EndpointSuffix=core.windows.net";
             _fileStorageService = new FileStorageService(connectionString);
         }
 
         public async Task<IActionResult> Index()
         {
-            var filesList = await _fileStorageService.ListFilesAsync();
-            return View(filesList);
+            var files = await _fileStorageService.FilesAsync();
+            return View(files);
         }
-
         [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
+        public async Task<IActionResult> Upload(IFormFile formFile)
         {
-            if (file != null)
+            if (formFile != null)
             {
-                await _fileStorageService.UploadFileAsync(file);
+                await _fileStorageService.UploadAsync(formFile);
             }
             return RedirectToAction(nameof(Index));
         }

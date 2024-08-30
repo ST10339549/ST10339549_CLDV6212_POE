@@ -5,7 +5,7 @@ namespace ST10339549_CLDV6212_POE.Controllers
 {
     public class ImageUploadController : Controller
     {
-        private readonly string _connectionString = "DefaultEndpointsProtocol=https;AccountName=st10339549;AccountKey=HCmh5cT2Fn6cnXsTna69QdswQCunUPD06UBscauSGoKgAlGTm4Vbsa9zpuQUQoR7lRKEuM1WFdId+AStcM6ObQ==;EndpointSuffix=core.windows.net";
+        private readonly string _connectionString = "DefaultEndpointsProtocol=https;AccountName=st10339549;AccountKey=2r3eN6egjj4zNt9nF8Bw2zMs7XwNBGnPcCiTgJG1jtDfATA+SeE8xYjqgCEdyFy9XMNHTiV1NPJw+AStGagjiw==;EndpointSuffix=core.windows.net";
         private readonly string _containerName = "images";
 
         public IActionResult Index()

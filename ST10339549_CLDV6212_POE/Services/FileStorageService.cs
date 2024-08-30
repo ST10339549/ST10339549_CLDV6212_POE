@@ -1,31 +1,37 @@
 ﻿using Azure.Storage.Files.Shares;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace ST10339549_CLDV6212_POE.Services
 {
     public class FileStorageService
     {
-        private readonly ShareClient _shareClient;
+        private readonly ShareClient _share;
 
         public FileStorageService(string connectionString)
         {
-            _shareClient = new ShareClient(connectionString, "contracts");
-            _shareClient.CreateIfNotExists();
+            _share = new ShareClient(connectionString, "contracts");
+            _share.CreateIfNotExists();
         }
 
-        public async Task UploadFileAsync(IFormFile file)
+        public async Task UploadAsync(IFormFile formFile)
         {
-            var directoryClient = _shareClient.GetRootDirectoryClient();
-            var fileClient = directoryClient.GetFileClient(file.FileName);
-            using var stream = file.OpenReadStream();
-            await fileClient.CreateAsync(stream.Length);
-            await fileClient.UploadAsync(stream);
+            var directory = _share.GetRootDirectoryClient();
+            var fileClient = directory.GetFileClient(formFile.FileName);
+
+            using var readStream = formFile.OpenReadStream();
+
+            // Create the file on Azure Files with the length of the stream
+            await fileClient.CreateAsync(readStream.Length);
+
+            // Upload the file in chunks if necessary; otherwise, use a single call if the file is small.
+            await fileClient.UploadAsync(readStream); // Upload the stream directly now that the file is created.
         }
 
-        public async Task<List<string>> ListFilesAsync()
+        public async Task<List<string>> FilesAsync()
         {
             var files = new List<string>();
-            var directoryClient = _shareClient.GetRootDirectoryClient();
-            await foreach (var item in directoryClient.GetFilesAndDirectoriesAsync())
+            var directory = _share.GetRootDirectoryClient();
+            await foreach (var item in directory.GetFilesAndDirectoriesAsync())
             {
                 files.Add(item.Name);
             }
