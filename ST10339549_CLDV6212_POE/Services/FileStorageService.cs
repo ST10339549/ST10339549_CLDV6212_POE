@@ -33,7 +33,9 @@ namespace ST10339549_CLDV6212_POE.Services
             var directory = _share.GetRootDirectoryClient();
             await foreach (var item in directory.GetFilesAndDirectoriesAsync())
             {
-                files.Add(item.Name);
+                // Generate the full URL to the file for display purposes
+                var fileUrl = $"{_share.Uri}/{item.Name}";
+                files.Add(fileUrl);
             }
             return files;
         }

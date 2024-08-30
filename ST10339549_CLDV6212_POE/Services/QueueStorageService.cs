@@ -8,7 +8,7 @@ namespace ST10339549_CLDV6212_POE.Services
 
         public QueueStorageService(string connectionString)
         {
-            _queueClient = new QueueClient(connectionString, "order-processing");
+            _queueClient = new QueueClient(connectionString, "orders");
             _queueClient.CreateIfNotExists();
         }
 
