@@ -13,7 +13,6 @@ namespace ST10339549_CLDV6212_POE.Services
 
         public TableStorageService(string connectionString)
         {
-            // Validate the connection string format
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connectionString);
             _tableClient = storageAccount.CreateCloudTableClient(new TableClientConfiguration());
 
@@ -60,6 +59,13 @@ namespace ST10339549_CLDV6212_POE.Services
 
         // ---------------------- Product Methods ----------------------
 
+        public async Task<List<Product>> GetProductsAsync()
+        {
+            var query = new TableQuery<Product>();
+            var productTable = await _productTable.ExecuteQuerySegmentedAsync(query, null);
+            return productTable.Results;
+        }
+
         public async Task AddProductAsync(Product product)
         {
             var insertOperation = TableOperation.Insert(product);
@@ -68,6 +74,9 @@ namespace ST10339549_CLDV6212_POE.Services
 
         public async Task<Product> GetProductAsync(string partitionKey, string rowKey)
         {
+            if (string.IsNullOrEmpty(partitionKey) || string.IsNullOrEmpty(rowKey))
+                throw new ArgumentNullException("PartitionKey and RowKey must be provided.");
+
             var retrieveOperation = TableOperation.Retrieve<Product>(partitionKey, rowKey);
             var result = await _productTable.ExecuteAsync(retrieveOperation);
             return result.Result as Product;
@@ -75,21 +84,19 @@ namespace ST10339549_CLDV6212_POE.Services
 
         public async Task UpdateProductAsync(Product product)
         {
+            if (product == null) throw new ArgumentNullException(nameof(product));
+
             var updateOperation = TableOperation.Replace(product);
             await _productTable.ExecuteAsync(updateOperation);
         }
 
         public async Task DeleteProductAsync(Product product)
         {
+            if (product == null) throw new ArgumentNullException(nameof(product));
+
             var deleteOperation = TableOperation.Delete(product);
             await _productTable.ExecuteAsync(deleteOperation);
         }
 
-        public async Task<List<Product>> GetProductsAsync()
-        {
-            var query = new TableQuery<Product>();
-            var productTable = await _productTable.ExecuteQuerySegmentedAsync(query, null);
-            return productTable.Results;
-        }
     }
 }

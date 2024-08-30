@@ -15,18 +15,15 @@ namespace ST10339549_CLDV6212_POE.Controllers
             _tableStorageService = new TableStorageService(connectionString);
         }
 
-        // GET: Product
         public async Task<IActionResult> Index()
         {
             var products = await _tableStorageService.GetProductsAsync();
             return View(products);
         }
 
-        // GET: Product/Create
         [HttpGet]
         public IActionResult Create() => View();
 
-        // POST: Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product product)
@@ -39,7 +36,6 @@ namespace ST10339549_CLDV6212_POE.Controllers
             return View(product);
         }
 
-        // GET: Product/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(string partitionKey, string rowKey)
         {
@@ -51,20 +47,24 @@ namespace ST10339549_CLDV6212_POE.Controllers
             return View(product);
         }
 
-        // POST: Product/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Product product)
         {
             if (ModelState.IsValid)
             {
-                await _tableStorageService.UpdateProductAsync(product);
-                return RedirectToAction(nameof(Index));
+                var existingProduct = await _tableStorageService.GetProductAsync(product.PartitionKey, product.RowKey);
+                if (existingProduct != null)
+                {
+                    product.ETag = existingProduct.ETag;
+                    await _tableStorageService.UpdateProductAsync(product);
+                    return RedirectToAction(nameof(Index));
+                }
+                return NotFound(); // If product is not found for editing
             }
             return View(product);
         }
 
-        // GET: Product/Delete/5
         [HttpGet]
         public async Task<IActionResult> Delete(string partitionKey, string rowKey)
         {
@@ -76,7 +76,6 @@ namespace ST10339549_CLDV6212_POE.Controllers
             return View(product);
         }
 
-        // POST: Product/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string partitionKey, string rowKey)
@@ -87,18 +86,6 @@ namespace ST10339549_CLDV6212_POE.Controllers
                 await _tableStorageService.DeleteProductAsync(product);
             }
             return RedirectToAction(nameof(Index));
-        }
-
-        // GET: Product/Details/5
-        [HttpGet]
-        public async Task<IActionResult> Details(string partitionKey, string rowKey)
-        {
-            var product = await _tableStorageService.GetProductAsync(partitionKey, rowKey);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
         }
     }
 }
