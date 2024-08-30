@@ -32,7 +32,7 @@ namespace ST10339549_CLDV6212_POE.Controllers
                     ProductId = productId,
                     Quantity = quantity,
                     Action = "processOrder",
-                    Timestamp = DateTime.UtcNow.ToString("o") // ISO 8601 format
+                    Timestamp = DateTime.UtcNow.ToString("o")
                 };
 
                 await _queueService.AddOrderMessageAsync(orderMessage);

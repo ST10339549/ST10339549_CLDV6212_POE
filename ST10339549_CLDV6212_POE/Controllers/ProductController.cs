@@ -60,7 +60,7 @@ namespace ST10339549_CLDV6212_POE.Controllers
                     await _tableStorageService.UpdateProductAsync(product);
                     return RedirectToAction(nameof(Index));
                 }
-                return NotFound(); // If product is not found for editing
+                return NotFound();
             }
             return View(product);
         }

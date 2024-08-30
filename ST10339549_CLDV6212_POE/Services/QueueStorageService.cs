@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Queues;
-using Newtonsoft.Json;  // Add this NuGet package for JSON handling
-using System.Text.Json;  // For better handling of JSON formatting
+using Newtonsoft.Json;
+using ST10339549_CLDV6212_POE.Models;
+using System.Text.Json;  
 
 namespace ST10339549_CLDV6212_POE.Services
 {
@@ -33,14 +34,5 @@ namespace ST10339549_CLDV6212_POE.Services
             }
             return messages;
         }
-    }
-
-    public class OrderMessage
-    {
-        public string OrderId { get; set; }
-        public string ProductId { get; set; }
-        public int Quantity { get; set; }
-        public string Action { get; set; }
-        public string Timestamp { get; set; }
     }
 }

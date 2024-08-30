@@ -13,7 +13,6 @@ namespace ST10339549_CLDV6212_POE.Controllers
         {
             string connectionString = "DefaultEndpointsProtocol=https;AccountName=st10339549;AccountKey=2r3eN6egjj4zNt9nF8Bw2zMs7XwNBGnPcCiTgJG1jtDfATA+SeE8xYjqgCEdyFy9XMNHTiV1NPJw+AStGagjiw==;EndpointSuffix=core.windows.net";
 
-            // Initialize the TableStorageService
             _tableStorageService = new TableStorageService(connectionString);
         }
 
@@ -49,11 +48,10 @@ namespace ST10339549_CLDV6212_POE.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Fetch the existing customer to get the correct ETag
                 var existingCustomer = await _tableStorageService.GetCustomerAsync(customer.PartitionKey, customer.RowKey);
                 if (existingCustomer != null)
                 {
-                    customer.ETag = existingCustomer.ETag; // Set the correct ETag
+                    customer.ETag = existingCustomer.ETag;
                     await _tableStorageService.UpdateCustomerAsync(customer);
                 }
                 return RedirectToAction(nameof(Index));
@@ -71,11 +69,10 @@ namespace ST10339549_CLDV6212_POE.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Customer customer)
         {
-            // Fetch the existing customer to get the correct ETag
             var existingCustomer = await _tableStorageService.GetCustomerAsync(customer.PartitionKey, customer.RowKey);
             if (existingCustomer != null)
             {
-                customer.ETag = existingCustomer.ETag; // Set the correct ETag
+                customer.ETag = existingCustomer.ETag;
                 await _tableStorageService.DeleteCustomerAsync(customer);
             }
             return RedirectToAction(nameof(Index));

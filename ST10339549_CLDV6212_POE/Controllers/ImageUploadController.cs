@@ -51,7 +51,6 @@ namespace ST10339549_CLDV6212_POE.Controllers
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
             var images = new List<string>();
 
-            // List all blobs in the container
             foreach (var blobItem in containerClient.GetBlobs())
             {
                 images.Add(containerClient.GetBlobClient(blobItem.Name).Uri.ToString());

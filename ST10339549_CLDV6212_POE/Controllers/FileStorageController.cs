@@ -30,7 +30,6 @@ namespace ST10339549_CLDV6212_POE.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: FileStorage/Delete?fileName=filename
         [HttpGet]
         public IActionResult Delete(string fileName)
         {
@@ -43,7 +42,6 @@ namespace ST10339549_CLDV6212_POE.Controllers
             return View();
         }
 
-        // POST: FileStorage/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string fileName)
